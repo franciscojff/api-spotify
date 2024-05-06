@@ -15,10 +15,6 @@ export default function ErrorPage() {
         </p>
         <p className="text-lg text-gray-700 mb-2">
           Si necesitas comunicarte con nosotros escribenos a{" "}
-          <span className="text-red-700 font-bold">
-            {" "}
-            contacto@braniffseguros.cl{" "}
-          </span>
         </p>
         <p className="italic text-gray-600">
           {error.statusText || error.message}
