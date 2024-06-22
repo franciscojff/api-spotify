@@ -4,85 +4,120 @@ import axios from "axios";
 
 //Calculo de T(N) de cada función
 
-const Formulario = () => {
-  const initialState = {
-    from_name: "",
-    date_of_birth: "",
-    playlist_length: "",
-    music_preference: "",
-    mood: "",
-  };
 
-  const [details, setDetails] = useState(initialState);
-  const [token, setToken] = useState("");
+const Formulario = () => {
+
+//Calculo de T(N) - Inicial State
+  const initialState = { //1 asignacion
+    from_name: "", //1 asignacion
+    date_of_birth: "", //1 asignacion
+    playlist_length: "", //1 asignacion
+    music_preference: "", //1 asignacion
+    mood: "", //1 asignacion
+  };
+  //Orden = O(5) = O(1)
+
+  //Calculo de T(N) - Estados
+  const [details, setDetails] = useState(initialState); //1 asignacion
+  const [token, setToken] = useState(""); //1 asignacion
   const [recomendacionesEncontrados, setRecomendacionesEncontrados] = useState(
     []
-  );
+  ); //1 asignacion
+  const [playlistLength, setPlaylistLength] = useState(""); //1 asignacion
+  const [selectedGenre, setSelectedGenre] = useState(""); //1 asignacion
+  const [selectedMood, setSelectedMood] = useState(""); //1 asignacion
 
-  const [playlistLength, setPlaylistLength] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [selectedMood, setSelectedMood] = useState("");
-
+  //Calculo de T(N) - getToken
   const getToken = async (e) => {
+
     e.preventDefault();
-    let client_id = Global.client_id;
-    let client_secret = Global.client_secret;
+    let client_id = Global.client_id; //1 asignacion
+    let client_secret = Global.client_secret; //1 asignacion
 
     try {
-      const response = await axios.post(
+      const response = await axios.post( //1 asignacion
         "https://accounts.spotify.com/api/token",
         "grant_type=client_credentials",
         {
           headers: {
-            Authorization: `Basic ${btoa(client_id + ":" + client_secret)}`,
-            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Basic ${btoa(client_id + ":" + client_secret)}`, //1 operacion
+            "Content-Type": "application/x-www-form-urlencoded", //1 asignacion 
           },
         }
       );
 
-      const token = response.data.access_token;
-      setToken(token);
+      const token = response.data.access_token; //1 asignacion 
+      setToken(token); //1 asignacion 
 
-      let limit = 10;
-      if (playlistLength === "media") {
-        limit = 20;
+      let limit = 10; //1 asignacion 
+      if (playlistLength === "media") { //1 comparacion 
+        limit = 20; //1 comparacion 
       } else if (playlistLength === "larga") {
         limit = 30;
       }
 
+      let songSeed = null;
+      switch(selectedGenre){
+        case "salsa":
+          songSeed = "6xcpIxu4IDH2gzAYCr6dIR";
+          break;
+        case "pop":
+          songSeed = "5jrdCoLpJSvHHorevXBATy";
+          break;
+        case "rock":
+          songSeed = "0G21yYKMZoHa30cYVi1iA8";
+          break;
+        case "samba":
+          songSeed = "2yAjjqcHMy6qUI6NNzNoVD";
+          break;
+        case "latin":
+          songSeed = "7JIjUx3GsL0upxmNJacmtz";
+          break;
+        case "electro":
+          songSeed = "0TDLuuLlV54CkRRUOahJb4";
+          break;
+        case "reggaeton":
+          songSeed = "1dAQ93kw8Sy9n4JCz2G9Nf";
+          break;          
+      }
+
+      // Ambas condiciones tienen el mismo T(N) de O(2) 
       try {
-        const response = await axios.get(
+        const response = await axios.get(  //1 asignacion 
           "https://api.spotify.com/v1/recommendations",
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`, //1 asignacion 
             },
             params: {
-              seed_artists: "4NHQUGzhtTLFvgF5SZesLK",
-              seed_genres: selectedGenre, selectedMood,
-              seed_tracks: "0c6xIDDpzE81m2q797ordA",
-              limit: limit,
+              seed_artists: songSeed, //1 asignacion 
+              seed_genres: selectedGenre, selectedMood, //2 asignaciones 
+              seed_tracks: null, //1 asignacion 
+              limit: limit, //1 asignacion 
             },
           }
         );
-        console.log("Recomendaciones:", response.data.tracks);
-        setRecomendacionesEncontrados(response.data.tracks); // Guardar los artistas encontrados
+        setRecomendacionesEncontrados(response.data.tracks); //1 asignacion 
       } catch (error) {
-        console.error("Error al buscar recomendaciones:", error);
+        console.error("Error al buscar recomendaciones:", error); //1 impresion 
       }
     } catch (error) {
-      console.error("Error al obtener el token:", error);
+      console.error("Error al obtener el token:", error); //1 impresion 
     }
   };
+      //Orden = O(18) = O(1)
 
-  const handleDetailsChange = (event) => {
-    const { name, value } = event.target;
-
+  //Calculo de T(N) - handleDetailsChange
+  
+  const handleDetailsChange = (event) => { //1 asignacion 
+    const { name, value } = event.target; //1 asignacion 
     setDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
+      ...prevDetails, //1 asignacion 
+      [name]: value, //1 asignacion 
     }));
   };
+
+  //Orden = O(4) = O(1)
 
   return (
     <div className="w-9/12 py-8 px-6 flex flex-col mx-auto">
@@ -163,15 +198,26 @@ const Formulario = () => {
         </button>
       </form>
       {/* Renderizar los artistas encontrados */}
-      <div>
+      <div className="mx-auto">
         {recomendacionesEncontrados.length > 0 && (
           <div>
             <h3 className="text-xl font-semibold my-5">
               Aca puedes ver tu playlist personalizada:
             </h3>
             <ul>
-              {recomendacionesEncontrados.map((song, index) => (
-                <li key={index}> <strong className="text-green-700"> {song.name} </strong> - {song.artists[0].name}</li>
+            {recomendacionesEncontrados.map((song, index) => (
+                <li key={index}>
+                  <strong className="text-green-700">{song.name}</strong> - {song.artists[0].name}
+                  <div>
+                    <iframe
+                      src={`https://open.spotify.com/embed/track/${song.id}`}
+                      className="w-full h-24"
+                      frameBorder="0"
+                      allowtransparency="true"
+                      allow="encrypted-media"
+                    ></iframe>
+                  </div>
+                </li>
               ))}
             </ul>
           </div>

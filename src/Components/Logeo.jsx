@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Global from "../Global/Global";
 
+//Calculo de T(N) - Inicial State
 function getImageUrl(name) {
-  return new URL(`../img/${name}.png`, import.meta.url).href;
+  return new URL(`../img/${name}.png`, import.meta.url).href; //1 return
 }
 
 export default function Login() {
-  const [token,setToker] = useState('')
+  //Calculo de T(N) - Estados
+  const [token,setToker] = useState('') //1 asignacion 
 
+   //Calculo de T(N) - useEffect para obtener el token de la URL
   useEffect( ()=>{
-    const hash = window.location.hash
-    let token = window.localStorage.getItem('token')
+    const hash = window.location.hash //1 asignacion 
+    let token = window.localStorage.getItem('token') //1 asignacion 
 
     if(!token && hash) {
-        token = hash.substring(1).split('&').find(elem => elem.startsWith('code')).split("=")[1]
-        console.log(token)
+        token = hash.substring(1).split('&').find(elem => elem.startsWith('code')).split("=")[1] //1 asignacion 
+        console.log(token) //1 impresion 
     }
   })
   return (
@@ -22,7 +25,6 @@ export default function Login() {
       <div className="flex items-center justify-center h-screen">
         <div id="login" className="text-center">
             
-        {console.log("Prsueb")}
           <img
             src={getImageUrl("logoCirculoNegro")}
             className="w-8 h-8 mx-auto mb-4"
